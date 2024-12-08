@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:quizapp/screens/startscreen.dart';
 import 'package:quizapp/widgets/question.dart';
+
+import '../data/questions_data.dart';
+import '../model/answer.dart';
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
@@ -22,7 +26,20 @@ class _QuizScreenState extends State<QuizScreen> {
 
   void switchScreen() {
     setState(() {
-      activeScreen = const Question();
+      activeScreen = const QuestionScreen();
+    });
+  }
+
+  int _currentQuestionIndex = 0;
+  // Initialize the Answer object
+  final Answer _answer = Answer();
+
+  void _nextQuestion(int index) {
+    setState(() {
+      if (_currentQuestionIndex < dummyQuestions.length - 1) {
+        _currentQuestionIndex++;
+        _answer.resetAnswer();
+      } else {}
     });
   }
 
