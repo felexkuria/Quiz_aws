@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:quizapp/data/questions_data.dart';
-import 'package:quizapp/model/answer.dart'; // Import the Answer class
-import 'package:quizapp/model/question.dart'; // Import the Question model
+import 'package:quizapp/model/answer.dart';
+import 'package:quizapp/model/question.dart';
+import 'package:quizapp/screens/score_screen.dart';
 
 class QuestionScreen extends StatefulWidget {
   const QuestionScreen({super.key});
@@ -11,71 +14,106 @@ class QuestionScreen extends StatefulWidget {
 }
 
 class _QuestionScreenState extends State<QuestionScreen> {
-  // Initialize the Answer object
   final Answer _answer = Answer();
-
-  // List of questions (as an example, you can fetch these dynamically)
   final List<Question> _questions = dummyQuestions;
-
   int _currentQuestionIndex = 0;
+  int _correctAnswer = 0;
+  int _incorrectAnswer = 0;
+  int _remainingTime = 520;
+  late Timer _timer;
+  @override
+  void initState() {
+    // TODO: implement initState
 
-  // Method to go to the next question
+    _startTimer();
+  }
+
   void _nextQuestion() {
     setState(() {
       if (_currentQuestionIndex < _questions.length - 1) {
         _currentQuestionIndex++;
+        _remainingTime == 30;
         _answer.resetAnswer();
       } else {
-        // Handle the end of quiz (e.g., show score or navigate to result screen)
-        // Optionally, handle end of quiz
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Quiz Finished!'),
-            content: const Text('Congratulations on finishing the quiz!'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Close'),
-              ),
-            ],
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => ScoreScreen(
+              correctAnswers: _correctAnswer,
+              totalQuestions: _questions.length,
+              restartQuiz: _restartQuiz, // Pass the restart function
+            ),
           ),
         );
       }
     });
   }
 
+  // Start the countdown timer
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingTime > 0) {
+        setState(() {
+          _remainingTime--;
+        });
+      } else {
+        // Time's up, automatically move to the next question
+        _nextQuestion();
+        _timer.cancel();
+      }
+    });
+  }
+
+  void _submitAnswer(Question question, String selectedOption) {
+    setState(() {
+      _remainingTime = 30;
+      if (selectedOption == question.correctAnswer) {
+        _correctAnswer++;
+        _answer.submitAnswer(question, selectedOption, isCorrect: true);
+      } else {
+        _incorrectAnswer++;
+        _answer.submitAnswer(question, selectedOption, isCorrect: false);
+      }
+    });
+  }
+
+  // Function to restart the quiz
+  void _restartQuiz() {
+    setState(() {
+      _currentQuestionIndex = 0; // Reset to the first question
+      _correctAnswer = 0; // Reset correct answers
+      _incorrectAnswer = 0; // Reset incorrect answers
+      _answer.resetAnswer(); // Reset answer state
+    });
+  }
+
+  // Stop the timer when navigating away from this screen
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     final questionData = _questions[_currentQuestionIndex];
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          'Quiz',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: Padding(
+    return SafeArea(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: ListView(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
+            Text('Time Remaining: $_remainingTime seconds'),
             Text(
               questionData.questionText,
               style: const TextStyle(
-                fontSize: 22,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
             ),
             const SizedBox(height: 40),
             for (var option in questionData.options)
@@ -84,9 +122,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 child: ElevatedButton(
                   onPressed: _answer.answerState == 'unanswered'
                       ? () {
-                          setState(() {
-                            _answer.submitAnswer(questionData, option);
-                          });
+                          _submitAnswer(questionData, option);
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
@@ -95,7 +131,13 @@ class _QuestionScreenState extends State<QuestionScreen> {
                             ? Colors.green
                             : Colors.red)
                         : Colors.white,
-                    side: BorderSide(color: Colors.black.withOpacity(0.3)),
+                    side: BorderSide(
+                      color: _answer.selectedAnswer == option
+                          ? (_answer.answerState == 'correct'
+                              ? Colors.green
+                              : Colors.red)
+                          : Colors.black.withOpacity(0.3),
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),
@@ -186,34 +228,28 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 ),
               ),
             const SizedBox(height: 20),
-            // Add this part in the QuestionScreen widget under the ElevatedButton for Next Question
             if (_answer.answerState != 'unanswered')
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: ElevatedButton(
                   onPressed: _nextQuestion,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.transparent, // Transparent background
+                    backgroundColor: Colors.transparent,
                     padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 24), // Less padding for a minimal look
+                        vertical: 12, horizontal: 24),
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(8), // Slightly rounded corners
+                      borderRadius: BorderRadius.circular(8),
                       side: BorderSide(
-                          color: Colors.black.withOpacity(0.2),
-                          width: 1), // Light border with subtle opacity
+                          color: Colors.black.withOpacity(0.2), width: 1),
                     ),
-                    elevation: 0, // Remove shadow for a flat, modern look
+                    elevation: 0,
                   ),
                   child: const Text(
                     'Next Question',
                     style: TextStyle(
-                      fontSize: 16, // Simple font size
-                      fontWeight:
-                          FontWeight.w600, // Slightly bold for readability
-                      color: Colors.black, // Dark text for better contrast
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
                     ),
                   ),
                 ),

@@ -1,13 +1,16 @@
 import 'package:quizapp/model/question.dart';
 
 class Answer {
-  String? selectedAnswer; // The answer selected by the user
+  String? selectedAnswer;
+  // The answer selected by the user
+  bool isCorrect = false;
   String answerState =
       'unanswered'; // Tracks the state: 'unanswered', 'correct', 'wrong'
   String explanation = ''; // Explanation for the answer state
 
   // Method to submit the answer and update the state
-  void submitAnswer(Question question, String answer) {
+  void submitAnswer(Question question, String answer,
+      {required bool isCorrect}) {
     selectedAnswer = answer;
 
     if (answer == question.correctAnswer) {
