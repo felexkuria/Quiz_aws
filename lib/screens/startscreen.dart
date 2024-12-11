@@ -75,7 +75,7 @@ class StartScreen extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         foregroundColor: isPrimary ? Colors.white : Colors.black,
-        backgroundColor: isPrimary ? Colors.blue : Colors.transparent,
+        backgroundColor: isPrimary ? Colors.orange : Colors.transparent,
         side: BorderSide(
           color: isPrimary ? Colors.transparent : Colors.black,
           width: 2,

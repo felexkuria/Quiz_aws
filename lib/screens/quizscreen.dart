@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizapp/screens/practiceexams.dart';
 import 'package:quizapp/screens/startscreen.dart';
 
 import 'question.dart';
@@ -21,22 +22,39 @@ class _QuizScreenState extends State<QuizScreen> {
 
   void switchScreen(String examName) {
     setState(() {
-      activeScreen = QuestionScreen(examName: examName); // Pass the exam name
+      //  activeScreen = QuestionScreen(examName: examName);
+      activeScreen = const ExamSelectionPage();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.indigo,
+          brightness: Brightness.light,
+        ),
+      ),
       home: Scaffold(
         body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(colors: [
-              Color.fromARGB(255, 247, 250, 247),
-              Color.fromARGB(255, 161, 156, 160),
-            ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.indigo.shade50,
+                Colors.indigo.shade100,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
-          child: activeScreen,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: activeScreen,
+            ),
+          ),
         ),
       ),
     );
