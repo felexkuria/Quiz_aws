@@ -13,6 +13,28 @@ class CognitoService {
     return email; // Use email directly as username to avoid InvalidParameterException
   }
 
+  Future<CognitoUser?> getCurrentUser() async {
+    try {
+      return await userPool.getCurrentUser();
+    } catch (e) {
+      print('Error getting current user: $e');
+      return null;
+    }
+  }
+
+  Future<List<CognitoUserAttribute>?> getUserAttributes() async {
+    try {
+      final cognitoUser = await getCurrentUser();
+      if (cognitoUser == null) {
+        throw Exception('No authenticated user found');
+      }
+      return await cognitoUser.getUserAttributes();
+    } catch (e) {
+      print('Error getting user attributes: $e');
+      return null;
+    }
+  }
+
   Future<bool?> signUp(String email, String password, String text,
       {required Map<String, String> userAttributes}) async {
     try {
@@ -73,6 +95,33 @@ class CognitoService {
       }
     } catch (e) {
       print('Error during sign out: $e');
+    }
+  }
+
+  // Request password reset code
+  Future<bool> forgotPassword(String email) async {
+    try {
+      final username = _generateUsername(email);
+      final cognitoUser = CognitoUser(username, userPool);
+      await cognitoUser.forgotPassword();
+      return true;
+    } catch (e) {
+      print('Error requesting password reset: $e');
+      return false;
+    }
+  }
+
+  // Confirm password reset with code and new password
+  Future<bool> confirmForgotPassword(
+      String email, String confirmationCode, String newPassword) async {
+    try {
+      final username = _generateUsername(email);
+      final cognitoUser = CognitoUser(username, userPool);
+      await cognitoUser.confirmPassword(confirmationCode, newPassword);
+      return true;
+    } catch (e) {
+      print('Error confirming password reset: $e');
+      return false;
     }
   }
 }

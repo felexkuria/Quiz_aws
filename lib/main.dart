@@ -5,6 +5,12 @@ import 'screens/login/signup_screen.dart';
 
 void main() {
   runApp(MaterialApp(home: SignUpScreen()));
+  runApp(MaterialApp(
+    home: SignUpScreen(),
+    theme: ThemeData.light(),
+    darkTheme: ThemeData.dark(),
+    themeMode: ThemeMode.system, // Automatically use device theme settings
+  ));
 }
 // Here’s a list of the **AWS Cloud Practitioner exam preparation features** you were working on:
 
