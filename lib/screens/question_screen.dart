@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:quizapp/screens/quizscreen.dart';
+import 'package:quizapp/screens/quiz_screen.dart';
 import 'package:quizapp/widgets/answer.dart';
 import 'package:quizapp/widgets/questionwidget.dart';
 import '../data/questions_data.dart';
@@ -23,7 +23,7 @@ class QuestionScreen extends StatefulWidget {
 
 class _QuestionScreenState extends State<QuestionScreen> {
   // Constants
-  static const int _initialTime = 30;
+  static const int _initialTime = 60;
   static const double _verticalSpacing = 24.0;
   static const double _horizontalPadding = 24.0;
 
@@ -81,6 +81,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
       isCorrect: false,
       timeTaken: _initialTime,
     );
+    setState(() {
+      _incorrectAnswer++;
+    });
     _nextQuestion();
   }
 
@@ -332,7 +335,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildQuestionScreen(),
+      body: widget.examName == "AWS Cloud Practitioner"
+          ? _buildQuestionScreen()
+          : const QuizScreen(),
     );
   }
 }

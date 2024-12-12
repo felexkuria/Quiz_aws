@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/quiz_button.dart';
+
 class StartScreen extends StatelessWidget {
   final void Function(String) startQuiz;
   const StartScreen({super.key, required this.startQuiz});
@@ -29,72 +31,39 @@ class StartScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            _buildQuizButton(
-              context,
+            QuizButton(
               title: "AWS Cloud Practitioner",
               icon: Icons.cloud, // Cloud icon
-              onPressed: () => startQuiz('AWS Cloud Practitioner'),
+              onPressed: () {
+                startQuiz('AWS Cloud Practitioner');
+              },
             ),
             const SizedBox(height: 20),
-            _buildQuizButton(
-              context,
+            QuizButton(
               title: "AWS Solutions Architect",
               icon: Icons.build, // Build icon
-              onPressed: () => startQuiz('AWS Solutions Architect'),
+              onPressed: () {
+                //  startQuiz('AWS Solutions Architect');
+              },
             ),
             const SizedBox(height: 20),
-            _buildQuizButton(
-              context,
+            QuizButton(
               title: "AWS Developer Associate",
               icon: Icons.code, // Code icon
-              onPressed: () => startQuiz('AWS Developer Associate'),
+              onPressed: () {
+                //  startQuiz('AWS Developer Associate');
+              },
             ),
             const SizedBox(height: 40),
-            _buildQuizButton(
-              context,
+            QuizButton(
               title: "Start Here",
               icon: Icons.play_arrow, // Play button icon for starting
-              onPressed: () => startQuiz('Default Exam'),
+              onPressed: () {
+                // startQuiz('Default Exam');
+              },
               isPrimary: true,
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuizButton(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    required VoidCallback onPressed,
-    bool isPrimary = false,
-  }) {
-    return OutlinedButton.icon(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-        foregroundColor: isPrimary ? Colors.white : Colors.black,
-        backgroundColor: isPrimary ? Colors.orange : Colors.transparent,
-        side: BorderSide(
-          color: isPrimary ? Colors.transparent : Colors.black,
-          width: 2,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-      ),
-      icon: Icon(
-        icon,
-        size: 30,
-        color: isPrimary ? Colors.white : Colors.black,
-      ),
-      label: Text(
-        title,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-          color: isPrimary ? Colors.white : Colors.black,
         ),
       ),
     );

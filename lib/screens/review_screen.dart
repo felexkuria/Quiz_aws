@@ -16,14 +16,19 @@ class ReviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(context),
-      body: Column(
-        children: [
-          _buildScoreSummary(),
-          Expanded(
-            child: _buildQuestionsList(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            children: [
+              _buildScoreSummary(),
+              Expanded(
+                child: _buildQuestionsList(),
+              ),
+              _buildRestartButton(),
+            ],
           ),
-          _buildRestartButton(),
-        ],
+        ),
       ),
     );
   }
@@ -39,6 +44,7 @@ class ReviewScreen extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       elevation: 0,
+      centerTitle: true,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.black),
         onPressed: () => Navigator.pop(context),
@@ -50,11 +56,11 @@ class ReviewScreen extends StatelessWidget {
     final percentage = (totalCorrect / answeredQuestions.length * 100).round();
 
     return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
+      margin: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -69,16 +75,16 @@ class ReviewScreen extends StatelessWidget {
           Text(
             '$percentage%',
             style: TextStyle(
-              fontSize: 48,
+              fontSize: 64,
               fontWeight: FontWeight.bold,
               color: _getScoreColor(percentage),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           Text(
             '$totalCorrect out of ${answeredQuestions.length} correct',
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 20,
               color: Colors.black87,
             ),
           ),
@@ -89,7 +95,7 @@ class ReviewScreen extends StatelessWidget {
 
   Widget _buildQuestionsList() {
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       itemCount: answeredQuestions.length,
       itemBuilder: (context, index) {
         final question = answeredQuestions[index];
@@ -107,22 +113,25 @@ class ReviewScreen extends StatelessWidget {
 
   Widget _buildRestartButton() {
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: ElevatedButton(
-        onPressed: onRestartQuiz,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          minimumSize: const Size(double.infinity, 50),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+      padding: const EdgeInsets.all(24),
+      child: SizedBox(
+        width: 300,
+        height: 56,
+        child: ElevatedButton(
+          onPressed: onRestartQuiz,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
           ),
-        ),
-        child: const Text(
-          'Restart Quiz',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+          child: const Text(
+            'Restart Quiz',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
@@ -156,40 +165,40 @@ class _QuestionReviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 24),
       elevation: 2,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildQuestionHeader(),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             Text(
               question,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             _buildAnswerRow(
               label: 'Your Answer:',
               answer: userAnswer,
               isCorrect: isCorrect,
             ),
             if (!isCorrect) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               _buildAnswerRow(
                 label: 'Correct Answer:',
                 answer: correctAnswer,
                 isCorrect: true,
               ),
             ],
-            const Divider(height: 24),
+            const Divider(height: 32),
             _buildTimeInfo(),
           ],
         ),
@@ -201,15 +210,16 @@ class _QuestionReviewCard extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
             color: Colors.blue.shade50,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
             'Q$questionNumber',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
+              fontSize: 16,
               color: Colors.blue,
             ),
           ),
@@ -218,6 +228,7 @@ class _QuestionReviewCard extends StatelessWidget {
         Icon(
           isCorrect ? Icons.check_circle : Icons.cancel,
           color: isCorrect ? Colors.green : Colors.red,
+          size: 28,
         ),
       ],
     );
@@ -236,15 +247,17 @@ class _QuestionReviewCard extends StatelessWidget {
           style: const TextStyle(
             color: Colors.grey,
             fontWeight: FontWeight.w500,
+            fontSize: 16,
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 12),
         Expanded(
           child: Text(
             answer,
             style: TextStyle(
               color: isCorrect ? Colors.green : Colors.red,
               fontWeight: FontWeight.w500,
+              fontSize: 16,
             ),
           ),
         ),
@@ -257,15 +270,15 @@ class _QuestionReviewCard extends StatelessWidget {
       children: [
         const Icon(
           Icons.timer_outlined,
-          size: 16,
+          size: 20,
           color: Colors.grey,
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: 8),
         Text(
           'Time taken: ${timeTaken}s',
           style: const TextStyle(
             color: Colors.grey,
-            fontSize: 12,
+            fontSize: 14,
           ),
         ),
       ],

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:quizapp/screens/practiceexams.dart';
-import 'package:quizapp/screens/startscreen.dart';
+import 'package:quizapp/screens/exam_selection_page.dart';
+import 'package:quizapp/screens/start_screen.dart';
 
-import 'question.dart';
+import 'question_screen.dart';
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quizapp/screens/reviewscreen.dart';
+import 'package:quizapp/screens/review_screen.dart';
 
 class ScoreScreen extends StatelessWidget {
   final int correctAnswers;
@@ -31,15 +31,19 @@ class ScoreScreen extends StatelessWidget {
         return false;
       },
       child: Scaffold(
+        backgroundColor: Colors.grey[50],
         appBar: AppBar(
-          title: const Text('Quiz Results'),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          title: const Text('Quiz Results',
+              style: TextStyle(
+                  color: Colors.black87, fontWeight: FontWeight.w600)),
           automaticallyImplyLeading: false,
         ),
         body: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
               if (constraints.maxWidth > 600) {
-                // Tablet/Desktop layout
                 return Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: constraints.maxWidth * 0.1,
@@ -53,7 +57,7 @@ class ScoreScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             _buildScoreText(),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 30),
                             _buildActionButtons(context),
                           ],
                         ),
@@ -67,19 +71,18 @@ class ScoreScreen extends StatelessWidget {
                   ),
                 );
               } else {
-                // Phone layout
                 return SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                      vertical: 40.0,
+                      horizontal: 24.0,
+                      vertical: 32.0,
                     ),
                     child: Column(
                       children: [
                         _buildScoreText(),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 30),
                         _buildActionButtons(context),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 30),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.4,
                           child: _buildTimeDisplay(context),
@@ -98,15 +101,19 @@ class ScoreScreen extends StatelessWidget {
 
   Widget _buildScoreText() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(15),
+        gradient: LinearGradient(
+          colors: [Colors.white, Colors.blue.shade50],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
@@ -115,27 +122,35 @@ class ScoreScreen extends StatelessWidget {
           const Text(
             'Your Score',
             style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
+              fontSize: 28,
+              fontWeight: FontWeight.w600,
               color: Colors.black87,
+              letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           Text(
             '$correctAnswers / $totalQuestions',
             style: TextStyle(
-              fontSize: 28,
+              fontSize: 48,
               fontWeight: FontWeight.bold,
               color: _getScoreColor(percentage),
             ),
           ),
-          const SizedBox(height: 10),
-          Text(
-            '${percentage.toStringAsFixed(2)}%',
-            style: TextStyle(
-              fontSize: 24,
-              color: _getScoreColor(percentage),
-              fontWeight: FontWeight.bold,
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: _getScoreColor(percentage).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              '${percentage.toStringAsFixed(1)}%',
+              style: TextStyle(
+                fontSize: 20,
+                color: _getScoreColor(percentage),
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -144,43 +159,51 @@ class ScoreScreen extends StatelessWidget {
   }
 
   Widget _buildTimeDisplay(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(10),
+                color: Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
-                'Average time: ${averageTime.toStringAsFixed(1)} seconds',
+                '${averageTime.toStringAsFixed(1)} sec avg',
                 style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                   color: Colors.blue,
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             const Text(
-              'Time per Question:',
+              'Time per Question',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
+                letterSpacing: 0.5,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
-                physics: const ClampingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 itemCount: questionTimes.length,
                 itemBuilder: (context, index) => _buildTimeListItem(index),
               ),
@@ -194,26 +217,39 @@ class ScoreScreen extends StatelessWidget {
   Widget _buildTimeListItem(int index) {
     final time = questionTimes[index];
     final timeText =
-        time < 60 ? '$time seconds' : '${(time / 60).floor()}m ${time % 60}s';
+        time < 60 ? '$time sec' : '${(time / 60).floor()}m ${time % 60}s';
 
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      elevation: 2,
-      child: ListTile(
-        dense: true,
-        leading: const Icon(
-          Icons.timer,
-          size: 16,
-          color: Colors.grey,
-        ),
-        title: Text('Question ${index + 1}'),
-        subtitle: Text(
-          timeText,
-          style: TextStyle(
-            color: time > 30 ? Colors.red : Colors.green,
-            fontWeight: FontWeight.w500,
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.timer_outlined,
+            size: 18,
+            color: time > 30 ? Colors.red[400] : Colors.green[400],
           ),
-        ),
+          const SizedBox(width: 12),
+          Text(
+            'Q${index + 1}',
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.black54,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            timeText,
+            style: TextStyle(
+              color: time > 30 ? Colors.red[400] : Colors.green[400],
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -228,21 +264,22 @@ class ScoreScreen extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blue,
-            minimumSize: const Size(200, 45),
+            minimumSize: const Size(220, 50),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(16),
             ),
-            elevation: 4,
+            elevation: 0,
           ),
           child: const Text(
-            'Restart Quiz',
+            'Try Again',
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
         TextButton.icon(
           onPressed: () {
             Navigator.pushReplacement(
@@ -256,13 +293,17 @@ class ScoreScreen extends StatelessWidget {
               ),
             );
           },
-          icon: const Icon(Icons.rate_review),
+          icon: const Icon(Icons.rate_review_outlined),
           label: const Text(
-            'Review Your Answers',
+            'Review Answers',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
             ),
+          ),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
         ),
       ],
