@@ -30,6 +30,11 @@ class _ExamSelectionPageState extends State<ExamSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: Colors.indigo,
+      brightness: Brightness.light,
+    );
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -37,8 +42,8 @@ class _ExamSelectionPageState extends State<ExamSelectionPage> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.blue[50]!,
-              Colors.white,
+              colorScheme.primaryContainer.withOpacity(0.3),
+              colorScheme.surface,
             ],
           ),
         ),
@@ -54,7 +59,7 @@ class _ExamSelectionPageState extends State<ExamSelectionPage> {
                   Text(
                     'Practice Exams',
                     style: TextStyle(
-                      color: Colors.grey[900],
+                      color: colorScheme.onBackground,
                       fontSize: 36,
                       fontWeight: FontWeight.w700,
                     ),
@@ -63,7 +68,7 @@ class _ExamSelectionPageState extends State<ExamSelectionPage> {
                   Text(
                     'Select an exam to begin',
                     style: TextStyle(
-                      color: Colors.grey[600],
+                      color: colorScheme.onBackground.withOpacity(0.7),
                       fontSize: 16,
                     ),
                   ),
@@ -98,19 +103,21 @@ class _ExamButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: colorScheme.shadow.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Material(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           onTap: onTap,
@@ -123,7 +130,7 @@ class _ExamButton extends StatelessWidget {
                   child: Text(
                     title,
                     style: TextStyle(
-                      color: Colors.grey[800],
+                      color: colorScheme.onSurface,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -132,7 +139,7 @@ class _ExamButton extends StatelessWidget {
                 Icon(
                   Icons.arrow_forward_ios,
                   size: 16,
-                  color: Colors.grey[400],
+                  color: colorScheme.onSurface.withOpacity(0.4),
                 ),
               ],
             ),

@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:quizapp/firebase_options.dart';
 import 'package:quizapp/screens/quiz_screen.dart';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'screens/login/signup_screen.dart';
 
-void main() {
-  runApp(MaterialApp(home: SignUpScreen()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MaterialApp(
     home: SignUpScreen(),
-    theme: ThemeData.light(),
-    darkTheme: ThemeData.dark(),
+    theme: ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.indigo,
+        brightness: Brightness.light,
+      ),
+    ),
+    darkTheme: ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.indigo,
+        brightness: Brightness.dark,
+      ),
+    ),
     themeMode: ThemeMode.system, // Automatically use device theme settings
   ));
 }
-// Here’s a list of the **AWS Cloud Practitioner exam preparation features** you were working on:
+// Here's a list of the **AWS Cloud Practitioner exam preparation features** you were working on:
 
 // ### AWS Cloud Practitioner Practice Exam Features
 
@@ -33,15 +50,15 @@ void main() {
 //    - A timer to simulate the actual exam experience.
 
 // 4. **Progress Tracking**:✅
-//    - Track the user’s progress through the questions (e.g., percentage completed).
+//    - Track the user's progress through the questions (e.g., percentage completed).
 //    - A summary page at the end with the total number of correct/incorrect answers.
    
 // 5. **Score Calculation**:✅
-//    - Calculate the user’s score out of the total number of questions answered.
+//    - Calculate the user's score out of the total number of questions answered.
 //    - Option to review answers and correct/incorrect selections after completing the exam.
 
 // 6. **Detailed Results and Explanations**:✅
-//    - Provide a brief explanation or additional resources after each answer to explain why it’s correct or incorrect.
+//    - Provide a brief explanation or additional resources after each answer to explain why it's correct or incorrect.
 //    - Users can view their answers and explanations at the end of the exam.
 
 // 7. **Timed Exam Simulation**:✅

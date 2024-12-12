@@ -1,12 +1,23 @@
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CognitoService {
+  static final CognitoService _instance = CognitoService._internal();
+
+  factory CognitoService() {
+    return _instance;
+  }
+
+  CognitoService._internal();
+
   final userPool = CognitoUserPool(
     const String.fromEnvironment('COGNITO_POOL_ID',
         defaultValue: 'us-east-1_hHwjYcWPq'), // Get from environment
     const String.fromEnvironment('COGNITO_CLIENT_ID',
         defaultValue: '383bck5lr92lsudm995ap6rt9k'), // Get from environment
   );
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Generate a unique username since email cannot be used directly
   String _generateUsername(String email) {
@@ -22,6 +33,23 @@ class CognitoService {
     }
   }
 
+  // Get Cognito User ID (Sub)
+  Future<String?> getUserId() async {
+    try {
+      final attributes = await getUserAttributes();
+      if (attributes == null) return null;
+
+      final subAttribute = attributes.firstWhere(
+        (attr) => attr.name == 'sub',
+        orElse: () => throw Exception('Sub attribute not found'),
+      );
+      return subAttribute.value;
+    } catch (e) {
+      print('Error getting user ID: $e');
+      return null;
+    }
+  }
+
   Future<List<CognitoUserAttribute>?> getUserAttributes() async {
     try {
       final cognitoUser = await getCurrentUser();
@@ -31,6 +59,23 @@ class CognitoService {
       return await cognitoUser.getUserAttributes();
     } catch (e) {
       print('Error getting user attributes: $e');
+      return null;
+    }
+  }
+
+  // Get current user's email address
+  static Future<String?> getCurrentUserEmail() async {
+    try {
+      final attributes = await CognitoService().getUserAttributes();
+      if (attributes == null) return null;
+
+      final emailAttribute = attributes.firstWhere(
+        (attr) => attr.name == 'email',
+        orElse: () => throw Exception('Email attribute not found'),
+      );
+      return emailAttribute.value;
+    } catch (e) {
+      print('Error getting user email: $e');
       return null;
     }
   }
@@ -52,6 +97,14 @@ class CognitoService {
         password,
         userAttributes: cognitoAttributes,
       );
+
+      // Create user document in Firestore
+      await _firestore.collection('users').doc(email).set({
+        'email': email,
+        'username': username,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
       return result.userConfirmed;
     } catch (e) {
       print('Error during sign up: $e');
@@ -80,6 +133,12 @@ class CognitoService {
       );
 
       final session = await cognitoUser.authenticateUser(authDetails);
+
+      // Store login time in Firestore
+      await _firestore.collection('users').doc(email).set({
+        'lastLoginTime': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
       return session;
     } catch (e) {
       print('Error during sign in: $e');
@@ -122,6 +181,15 @@ class CognitoService {
     } catch (e) {
       print('Error confirming password reset: $e');
       return false;
+    }
+  }
+
+  static Future<String?> getCurrentUserId() async {
+    try {
+      return await CognitoService().getUserId();
+    } catch (e) {
+      print('Error getting current user ID: $e');
+      return null;
     }
   }
 }

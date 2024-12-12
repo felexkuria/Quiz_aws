@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:quizapp/screens/review_screen.dart';
 
-class ScoreScreen extends StatelessWidget {
+import '../services/cognito_service.dart';
+
+class ScoreScreen extends StatefulWidget {
   final int correctAnswers;
   final int totalQuestions;
   final VoidCallback restartQuiz;
@@ -24,7 +27,62 @@ class ScoreScreen extends StatelessWidget {
             : questionTimes.reduce((a, b) => a + b) / questionTimes.length;
 
   @override
+  State<ScoreScreen> createState() => _ScoreScreenState();
+}
+
+class _ScoreScreenState extends State<ScoreScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  CognitoService cognitoService = CognitoService();
+
+  Future<String?> _getUsername() async {
+    try {
+      final currentUser = await cognitoService.getCurrentUser();
+      if (currentUser != null) {
+        final session = await currentUser.getSession();
+        final email = session!.getIdToken().payload['email'];
+        print('Current user email: $email');
+        if (email != null) {
+          return email;
+        }
+      }
+      return null;
+    } catch (e) {
+      print('Error getting username: $e');
+      return null;
+    }
+  }
+
+  Future<void> _saveQuizResults() async {
+    try {
+      final username = await _getUsername();
+      if (username == null) {
+        print('Error: Username is null');
+        return;
+      }
+
+      await _firestore
+          .collection('users')
+          .doc(username)
+          .collection('quiz_results')
+          .add({
+        'userId': await CognitoService.getCurrentUserId(),
+        'timestamp': Timestamp.now(),
+        'correctAnswers': widget.correctAnswers,
+        'totalQuestions': widget.totalQuestions,
+        'percentage': widget.percentage,
+        'averageTime': widget.averageTime,
+        'questionTimes': widget.questionTimes,
+        'answeredQuestions': widget.answeredQuestions,
+      });
+    } catch (e) {
+      print('Error saving quiz results: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _saveQuizResults();
     return WillPopScope(
       onWillPop: () async {
         Navigator.of(context).popUntil((route) => route.isFirst);
@@ -130,25 +188,25 @@ class ScoreScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            '$correctAnswers / $totalQuestions',
+            '${widget.correctAnswers} / ${widget.totalQuestions}',
             style: TextStyle(
               fontSize: 48,
               fontWeight: FontWeight.bold,
-              color: _getScoreColor(percentage),
+              color: _getScoreColor(widget.percentage),
             ),
           ),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: _getScoreColor(percentage).withOpacity(0.1),
+              color: _getScoreColor(widget.percentage).withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              '${percentage.toStringAsFixed(1)}%',
+              '${widget.percentage.toStringAsFixed(1)}%',
               style: TextStyle(
                 fontSize: 20,
-                color: _getScoreColor(percentage),
+                color: _getScoreColor(widget.percentage),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -182,7 +240,7 @@ class ScoreScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
-                '${averageTime.toStringAsFixed(1)} sec avg',
+                '${widget.averageTime.toStringAsFixed(1)} sec avg',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -204,7 +262,7 @@ class ScoreScreen extends StatelessWidget {
             Expanded(
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
-                itemCount: questionTimes.length,
+                itemCount: widget.questionTimes.length,
                 itemBuilder: (context, index) => _buildTimeListItem(index),
               ),
             ),
@@ -215,7 +273,7 @@ class ScoreScreen extends StatelessWidget {
   }
 
   Widget _buildTimeListItem(int index) {
-    final time = questionTimes[index];
+    final time = widget.questionTimes[index];
     final timeText =
         time < 60 ? '$time sec' : '${(time / 60).floor()}m ${time % 60}s';
 
@@ -259,7 +317,7 @@ class ScoreScreen extends StatelessWidget {
       children: [
         ElevatedButton(
           onPressed: () {
-            restartQuiz();
+            widget.restartQuiz();
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
           style: ElevatedButton.styleFrom(
@@ -286,9 +344,9 @@ class ScoreScreen extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (_) => ReviewScreen(
-                  answeredQuestions: answeredQuestions,
-                  totalCorrect: correctAnswers,
-                  onRestartQuiz: restartQuiz,
+                  answeredQuestions: widget.answeredQuestions,
+                  totalCorrect: widget.correctAnswers,
+                  onRestartQuiz: widget.restartQuiz,
                 ),
               ),
             );

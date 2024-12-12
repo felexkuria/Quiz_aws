@@ -1,0 +1,52 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "quizapp-4d983",
+          "appId": "1:375064665660:android:bf67a62332809877052d39",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "quizapp-4d983",
+          "appId": "1:375064665660:ios:188c948fe481c198052d39",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "quizapp-4d983",
+          "appId": "1:375064665660:ios:188c948fe481c198052d39",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "quizapp-4d983",
+          "configurations": {
+            "android": "1:375064665660:android:bf67a62332809877052d39",
+            "ios": "1:375064665660:ios:188c948fe481c198052d39",
+            "macos": "1:375064665660:ios:188c948fe481c198052d39",
+            "web": "1:375064665660:web:258197dd07b3f678052d39",
+            "windows": "1:375064665660:web:348a4821c31e318f052d39"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "region": "us-central1"
+    }
+  }
+}

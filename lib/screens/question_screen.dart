@@ -196,8 +196,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.blue.shade50,
-                Colors.white,
+                Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                Theme.of(context).colorScheme.surface,
               ],
             ),
           ),
@@ -320,7 +320,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
             Text(
               'Next Question',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -335,9 +335,11 @@ class _QuestionScreenState extends State<QuestionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: widget.examName == "AWS Cloud Practitioner"
-          ? _buildQuestionScreen()
-          : const QuizScreen(),
+      appBar: AppBar(
+        title: Text(widget.examName),
+        centerTitle: true,
+      ),
+      body: _buildQuestionScreen(),
     );
   }
 }
