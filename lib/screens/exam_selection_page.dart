@@ -5,14 +5,14 @@ import 'package:quizapp/screens/question_screen.dart';
 import '../data/practice_exam.dart';
 import '../data/questions_data.dart';
 
-class ExamSelectionPage extends StatefulWidget {
-  const ExamSelectionPage({super.key});
+class ExamSelectionScreen extends StatefulWidget {
+  const ExamSelectionScreen({super.key});
 
   @override
-  State<ExamSelectionPage> createState() => _ExamSelectionPageState();
+  State<ExamSelectionScreen> createState() => _ExamSelectionScreenState();
 }
 
-class _ExamSelectionPageState extends State<ExamSelectionPage> {
+class _ExamSelectionScreenState extends State<ExamSelectionScreen> {
   void selectExam(int examNumber, String examName) {
     List<Question> questions =
         examNumber == 1 ? practiceQuestions : dummyQuestions;

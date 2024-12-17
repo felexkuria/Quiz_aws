@@ -150,7 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     TextButton(
                       onPressed: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => LoginPage()));
+                            MaterialPageRoute(builder: (_) => LoginScreen()));
                       },
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.grey[700],
@@ -246,7 +246,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (confirmResult) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => LoginPage()),
+              MaterialPageRoute(builder: (_) => LoginScreen()),
             );
           }
         }

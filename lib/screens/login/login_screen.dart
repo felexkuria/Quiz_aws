@@ -5,12 +5,14 @@ import 'package:quizapp/screens/quiz_screen.dart';
 
 import '../../services/cognito_service.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String _error = '';
