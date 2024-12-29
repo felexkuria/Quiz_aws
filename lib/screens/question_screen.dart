@@ -6,6 +6,7 @@ import 'package:quizapp/widgets/questionwidget.dart';
 import '../data/questions_data.dart';
 import '../model/answer.dart';
 import '../model/question.dart';
+import '../widgets/progress_indicator.dart';
 import 'score_screen.dart';
 
 class QuestionScreen extends StatefulWidget {
@@ -213,7 +214,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 constraints: const BoxConstraints(maxWidth: 800),
                 child: Column(
                   children: [
-                    _buildProgressIndicator(),
+                    ProgressIndicatora(
+                      questions: widget.questions,
+                    ),
                     const SizedBox(height: _verticalSpacing),
                     _buildTimerWidget(),
                     const SizedBox(height: _verticalSpacing),
@@ -238,28 +241,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
           ),
         );
       }),
-    );
-  }
-
-  Widget _buildProgressIndicator() {
-    return Column(
-      children: [
-        LinearProgressIndicator(
-          value: (_currentQuestionIndex + 1) / widget.questions.length,
-          backgroundColor: Colors.grey[200],
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]!),
-          borderRadius: BorderRadius.circular(10),
-          minHeight: 10,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Question ${_currentQuestionIndex + 1}/${widget.questions.length}',
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
     );
   }
 

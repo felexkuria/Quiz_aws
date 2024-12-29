@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:quizapp/screens/exam_selection_page.dart';
 import 'package:quizapp/screens/start_screen.dart';
 
-import 'question_screen.dart';
-
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
 
@@ -12,7 +10,7 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-  late Widget activeScreen;
+  Widget? activeScreen;
 
   @override
   void initState() {

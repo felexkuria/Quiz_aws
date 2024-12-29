@@ -48,7 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
 
-      // Add password minimum length validation
+      // Add password policy validation
+      // Check each password requirement separately
       if (_passwordController.text.length < 8) {
         setState(() {
           _error = 'Password must be at least 8 characters long';
@@ -56,7 +57,35 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         return;
       }
-
+      if (!RegExp(r'[A-Z]').hasMatch(_passwordController.text)) {
+        setState(() {
+          _error = 'Password must contain at least one uppercase letter';
+          _isLoading = false;
+        });
+        return;
+      }
+      if (!RegExp(r'[a-z]').hasMatch(_passwordController.text)) {
+        setState(() {
+          _error = 'Password must contain at least one lowercase letter';
+          _isLoading = false;
+        });
+        return;
+      }
+      if (!RegExp(r'[0-9]').hasMatch(_passwordController.text)) {
+        setState(() {
+          _error = 'Password must contain at least one number';
+          _isLoading = false;
+        });
+        return;
+      }
+      if (!RegExp(r'[@$!%*?&]').hasMatch(_passwordController.text)) {
+        setState(() {
+          _error =
+              'Password must contain at least one special character (@\$!%*?&)';
+          _isLoading = false;
+        });
+        return;
+      }
       final signInResult = await CognitoService().signIn(
         _emailController.text.trim(),
         _passwordController.text,
@@ -68,10 +97,10 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoading = false;
         });
         return;
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => const QuizScreen()));
       }
-
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => const QuizScreen()));
     } catch (e) {
       setState(() {
         // Provide a more user-friendly error message
@@ -196,14 +225,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Card(
-              elevation: 4,
+    return Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.indigo.shade50,
+              Colors.indigo.shade100,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
               child: Stack(
                 children: [
                   Padding(
@@ -337,8 +374,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

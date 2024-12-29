@@ -19,7 +19,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MaterialApp(
-    initialRoute: Routes.adminPanel,
+    initialRoute: Routes.signup,
     routes: {
       Routes.adminPanel: (context) => AdminPanel(),
       Routes.login: (context) => const LoginScreen(),
@@ -33,20 +33,6 @@ void main() async {
             startQuiz: (String) {},
           ),
     },
-    theme: ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.indigo,
-        brightness: Brightness.light,
-      ),
-    ),
-    darkTheme: ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.indigo,
-        brightness: Brightness.dark,
-      ),
-    ),
-    themeMode: ThemeMode.system, // Automatically use device theme settings
+    // Automatically use device theme settings
   ));
 }

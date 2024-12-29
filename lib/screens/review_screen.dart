@@ -14,20 +14,17 @@ class ReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(context),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Column(
-            children: [
-              _buildScoreSummary(),
-              Expanded(
-                child: _buildQuestionsList(),
-              ),
-              _buildRestartButton(),
-            ],
-          ),
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Column(
+          children: [
+            _buildScoreSummary(),
+            Expanded(
+              child: _buildQuestionsList(),
+            ),
+            _buildRestartButton(),
+          ],
         ),
       ),
     );

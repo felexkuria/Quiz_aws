@@ -59,7 +59,7 @@ class _ExamSelectionScreenState extends State<ExamSelectionScreen> {
                   Text(
                     'Practice Exams',
                     style: TextStyle(
-                      color: colorScheme.onBackground,
+                      color: colorScheme.onSurface,
                       fontSize: 36,
                       fontWeight: FontWeight.w700,
                     ),
@@ -68,7 +68,7 @@ class _ExamSelectionScreenState extends State<ExamSelectionScreen> {
                   Text(
                     'Select an exam to begin',
                     style: TextStyle(
-                      color: colorScheme.onBackground.withOpacity(0.7),
+                      color: colorScheme.onSurface.withOpacity(0.7),
                       fontSize: 16,
                     ),
                   ),
