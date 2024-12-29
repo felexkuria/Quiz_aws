@@ -34,51 +34,51 @@ class CognitoService {
   }
 
   // Get Cognito User ID (Sub)
-  Future<String?> getUserId() async {
-    try {
-      final attributes = await getUserAttributes();
-      if (attributes == null) return null;
+  // Future<String?> getUserId() async {
+  //   try {
+  //     final attributes = await getUserAttributes();
+  //     if (attributes == null) return null;
 
-      final subAttribute = attributes.firstWhere(
-        (attr) => attr.name == 'sub',
-        orElse: () => throw Exception('Sub attribute not found'),
-      );
-      return subAttribute.value;
-    } catch (e) {
-      print('Error getting user ID: $e');
-      return null;
-    }
-  }
+  //     final subAttribute = attributes.firstWhere(
+  //       (attr) => attr.name == 'sub',
+  //       orElse: () => throw Exception('Sub attribute not found'),
+  //     );
+  //     return subAttribute.value;
+  //   } catch (e) {
+  //     print('Error getting user ID: $e');
+  //     return null;
+  //   }
+  // }
 
-  Future<List<CognitoUserAttribute>?> getUserAttributes() async {
-    try {
-      final cognitoUser = await getCurrentUser();
-      if (cognitoUser == null) {
-        throw Exception('No authenticated user found');
-      }
-      return await cognitoUser.getUserAttributes();
-    } catch (e) {
-      print('Error getting user attributes: $e');
-      return null;
-    }
-  }
+  // Future<List<CognitoUserAttribute>?> getUserAttributes() async {
+  //   try {
+  //     final cognitoUser = await getCurrentUser();
+  //     if (cognitoUser == null) {
+  //       throw Exception('User is not authenticated');
+  //     }
+  //     return await cognitoUser.getUserAttributes();
+  //   } catch (e) {
+  //     print('Error getting user attributes: $e');
+  //     return null;
+  //   }
+  // }
 
   // Get current user's email address
-  static Future<String?> getCurrentUserEmail() async {
-    try {
-      final attributes = await CognitoService().getUserAttributes();
-      if (attributes == null) return null;
+  // static Future<String?> getCurrentUserEmail() async {
+  //   try {
+  //     final attributes = await CognitoService().getUserAttributes();
+  //     if (attributes == null) return null;
 
-      final emailAttribute = attributes.firstWhere(
-        (attr) => attr.name == 'email',
-        orElse: () => throw Exception('Email attribute not found'),
-      );
-      return emailAttribute.value;
-    } catch (e) {
-      print('Error getting user email: $e');
-      return null;
-    }
-  }
+  //     final emailAttribute = attributes.firstWhere(
+  //       (attr) => attr.name == 'email',
+  //       orElse: () => throw Exception('Email attribute not found'),
+  //     );
+  //     return emailAttribute.value;
+  //   } catch (e) {
+  //     print('Error getting user email: $e');
+  //     return null;
+  //   }
+  // }
 
   Future<bool?> signUp(String email, String password, String text,
       {required Map<String, String> userAttributes}) async {
@@ -184,12 +184,12 @@ class CognitoService {
     }
   }
 
-  static Future<String?> getCurrentUserId() async {
-    try {
-      return await CognitoService().getUserId();
-    } catch (e) {
-      print('Error getting current user ID: $e');
-      return null;
-    }
-  }
+  // static Future<String?> getCurrentUserId() async {
+  //   try {
+  //     return await CognitoService().getUserId();
+  //   } catch (e) {
+  //     print('Error getting current user ID: $e');
+  //     return null;
+  //   }
+  // }
 }

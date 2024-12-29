@@ -14,20 +14,36 @@ class ReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 800),
-        child: Column(
-          children: [
-            _buildScoreSummary(),
-            Expanded(
-              child: _buildQuestionsList(),
-            ),
-            _buildRestartButton(),
-          ],
+    return Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.indigo.shade50,
+              Colors.indigo.shade100,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
-      ),
-    );
+        child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Scaffold(
+              appBar: _buildAppBar(context),
+              body: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 800),
+                  child: Column(
+                    children: [
+                      _buildScoreSummary(),
+                      Expanded(
+                        child: _buildQuestionsList(),
+                      ),
+                      _buildRestartButton(),
+                    ],
+                  ),
+                ),
+              ),
+            )));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {

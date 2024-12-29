@@ -66,7 +66,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
           .doc(username)
           .collection('quiz_results')
           .add({
-        'userId': await CognitoService.getCurrentUserId(),
+        'userId': CognitoService().userPool.getClientId(),
         'timestamp': Timestamp.now(),
         'correctAnswers': widget.correctAnswers,
         'totalQuestions': widget.totalQuestions,
